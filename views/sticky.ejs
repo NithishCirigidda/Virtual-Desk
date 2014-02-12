@@ -1,0 +1,80 @@
+
+
+<div class="row">
+
+  <div class="d-s span4">
+    <div>
+      <form class="well f-i" onsubmit="sticky.createDoc($(this).find('[name=docName]').val());return false;">
+	<input type="text" name="docName" class="input-medium"  />
+	<button type="submit" class="btn">Create  sticky note</button>
+      </form>
+    </div>
+    <div class="btn-group pull-right">
+      <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+	Manage Sticky notes
+	<span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+	<li>
+
+	  <a href="javascript:void(0);" onclick="sticky.showDeleteButtons();">Delete sticky note</a>
+	  <a href="javascript:void(0);" onclick="user_messages.showMessages();">My Messages</a>
+	</li>
+      </ul>
+    </div>
+
+
+
+
+
+    <ul class="list-of-documents nav nav-list">
+      <li class="nav-header">
+	<b>My Sticky notes</b>
+      </li>
+
+      <% for (var i = 0; i < usersticky.length; i++) { %>
+
+
+
+<div id="container1">
+     <div class="beauty">
+        <li class="sticky taped2" style="width: 250px;" data-doc-id="<%= usersticky[i].id %>">
+	<a style="float:left;clear:both" href="/document/<%= usersticky[i].id %>" ><%= usersticky[i].name %></a>
+
+	<div class="btn-group pull-right">
+	  <% if (usersticky[i].readAccess) { %>
+	  <button disabled class="btn">read permission</button>
+	  <% } else { %>
+	  <button onclick="sticky.reqReadAccess('<%= usersticky[i].id %>', '<%= usersticky[i].name %>');" class="btn">read permission</button>
+	  <% } if (usersticky[i].writeAccess) { %>
+	  <button class="btn" disabled>write permission</button>
+	  <% } else { %>
+	  <button onclick="sticky.reqWriteAccess('<%= usersticky[i].id %>', '<%= usersticky[i].name %>');" class="btn">write permission</button>
+	  <% } %>
+	  <% if (usersticky[i].canShare) { %>
+	  <button class="btn" onclick="sticky.openShareDoc('<%= usersticky[i].id %>', '<%= usersticky[i].name %>');">share permission</button>
+	  <% } %>
+
+	</div>
+
+
+	<button onclick="sticky.deleteDoc('<%= usersticky[i].id %>', '<%= usersticky[i].name %>');" style="display:none;" class="close">x</button>
+     </li>
+
+     </div>
+
+</div>
+
+
+      <% } %>
+
+    </ul>
+
+  </div>
+</div>
+
+
+
+
+
+

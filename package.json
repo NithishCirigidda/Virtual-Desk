@@ -1,0 +1,11 @@
+{
+    "dependencies": {
+    "express" : "2.5.x"
+    , "mongoose" : "2.6.x"
+    , "share" : "0.5.x"
+    , "socket.io" : "0.9.x"
+    ,"connect-mongo" : "*"
+    , "ejs" : "0.8.x"
+    , "fs-extra" : "0.x.x"
+}
+}

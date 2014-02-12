@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="span6">
+
+    <div class="bdl">
+      <button class="btn btn-primary" onclick="document.location.href='/';">
+	<i class="icon-backward"></i>
+	Back to Sticky note Listing
+      </button>
+
+    </div>
+    <div id="header">
+      <div id="headtext">
+	Editing&nbsp;
+	<b class="current-doc" data-doc-id="<%= uDt.id %>" id="docname"><%= uDt.name %></b>
+	<b><a class="sdl" href="javascript:void(0);" onclick="sticky.saveDoc('<%= uDt.id %>', '<%= uDt.name %>');">Save</a></b>
+	<small id="l-s-t-p"   class="pull-right">
+	  Last Saved <span id="l-s-t"></span>
+	</small>  
+      </div>
+    </div>
+    <div id="doc-area">
+      <div id="editor">
+      </div>
+    </div>
+  </div>
+
+</div>
+

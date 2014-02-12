@@ -1,0 +1,9 @@
+first : run monogdb
+
+second : 
+copy files to a folder
+open command promt and go to the folder
+npm install
+node app.js
+
+

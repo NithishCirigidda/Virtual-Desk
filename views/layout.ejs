@@ -1,0 +1,178 @@
+
+<html>
+<head>
+
+    <title><%= title %></title>
+
+
+
+    <link href="/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/css/bootstrap-responsive.css" rel="stylesheet"/>
+    <link href="/css/stylesheet.css" rel="stylesheet"/>
+
+
+
+    <% if (typeof Style != "undefined") { %>
+    <link href="/css/<%= Style %>" rel="stylesheet"/>
+    <% } %>
+    <style>
+        body {
+            padding-top: 60px;
+
+        }
+    </style>
+
+
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.effects.core.js"></script>
+    <script src="/js/jquery.effects.slide.js"></script>
+
+
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="/js/index.js"></script>
+
+
+
+    <script type="text/javascript" src="/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/handlebars.js"></script>
+    <script type="text/javascript" src="/js/bootbox.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.timeago.js"></script>
+
+
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+    <% if (typeof Script != "undefined") { %>
+    <script type="text/javascript" src="/js/<%= Script %>"></script>
+    <% } %>
+</head>
+
+<body>
+
+<%- partial("a.ejs") %>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/"><%= shortTitle %></a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="active"><a href="/">Home</a></li>
+
+                </ul>
+            </div>
+
+            <% if (typeof presentUser != "undefined" && typeof issignIn != "undefined") { %>
+            <% if (presentUser && issignIn) { %>
+            <div class="welcome-message pull-right">
+                <strong>Welcome, </strong><span id="current-user-name"><%= presentUser %></span><a href="javascript:um.logout();"> Logout</a>
+            </div>
+            <% } %>
+            <% } else { %>
+            <form action="/" class="pull-right" method="post">
+                <input name="username" class="input-small" type="text"  />
+                <input name="password" class="input-small" type="password"  />
+                <button class="btn" type="submit">Sign In</button>
+            </form>
+            <button onclick="document.location.href='/s'" class="sign-up btn btn-success pull-right" type="submit">register</button>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<div class="container second-container">
+
+    <% if (typeof info.length !== "undefined" && info != "")  { %>
+    <div class="alert-info alert">
+        <button  data-dismiss="alert" class="close">x</button>
+        <%= info %>
+    </div>
+    <% } %>
+
+    <% if (typeof error.length !== "undefined" && error != "")  { %>
+    <div class="alert-error alert">
+        <button  data-dismiss="alert" class="close">x</button>
+        <%= error %>
+    </div>
+    <% } %>
+
+    <% if (typeof infos === "object" && typeof infos.length === "undefined") { %>
+    <div class="alert-info alert">
+        <button  data-dismiss="alert" class="close">x</button>
+        <ul>
+            <% for (var key in infos) { %>
+            <li><b><%= key %></b> : <%= infos[key] %></li>
+            <% } %>
+        </ul>
+    </div>
+    <% } %>
+
+    <% if (typeof errors === "object" && typeof errors.length === "undefined") { %>
+    <div class=" alert-error alert">
+        <button  data-dismiss="alert" class="close">x</button>
+        <ul>
+            <% for (var key in errors) { %>
+            <li><b><%= key %></b> : <%= errors[key] %></li>
+            <% } %>
+        </ul>
+    </div>
+    <% } %>
+
+
+    <div class="content">
+        <div class="page-header">
+            <h1><%= shortTitle %>
+                <% if (typeof tagLine != "undefined") { %>
+                <small> <%= tagLine %></small>
+                <% } %>
+            </h1>
+        </div>
+        <%- body %>
+
+        <% if (typeof uDt != "undefined") { %>
+        <!-- load ace js here -->
+        <script type="text/javascript" src="/js/ace.js"></script>
+        <script type="text/javascript" src="/js/mode-latex.js"></script>
+
+
+        <!-- load sharejs scripts to make the ace editor function -->
+        <script type="text/javascript" src="/channel/bcsocket.js"></script>
+        <script type="text/javascript" src="/share/share.js"></script>
+        <script type="text/javascript" src="/share/ace.js"></script>
+
+        <!-- load 'bootstrap clickover' here -->
+        <script type="text/javascript" src="/js/bootstrapx-clickover.js"></script>
+
+        <!-- load 'jquery transit' here -->
+        <script type="text/javascript" src="/js/jquery.transit.min.js"></script>
+
+        <!-- Use latest PDF.js build from Github -->
+        <script type="text/javascript" src="/js/pdf.js"></script>
+
+        <script type="text/javascript" src="/js/container.js"></script>
+        <script type="text/javascript">
+            var onloadDoc = {
+                "id" : '<%= uDt.id %>'
+                , "name": '<%= uDt.name %>'
+                , "text": unescape('<%= uDt.text %>')
+                , "lastSaved": '<%= uDt.lastSaved %>'
+                , "sharesWith": '<%= uDt.sharesWith %>'
+                , "readAccess" : '<%= uDt.readAccess %>'
+                , "writeAccess" : '<%= uDt.writeAccess %>'
+                , "canShare" : '<%= uDt.canShare %>'
+            };
+        </script>
+        <% } %>
+
+
+        <script type="text/javascript" src="/js/application.js"></script>
+
+
+
+</body>
+</html>

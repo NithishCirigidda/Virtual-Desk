@@ -1,0 +1,147 @@
+
+<script id="k" type="text">
+  <li id="{{id}}">
+    <a  href="/document/{{id}}">{{name}}</a>
+
+    <div class="pull-right btn-group">
+      {{#if readAccess}}
+      <button   disabled class="btn">read permission</button>
+      {{else}}
+      <button  onclick="sticky.reqReadAccess('{{id}}', '{{name}}');" class="btn" >read permission</button>
+      {{/if}}
+      {{#if writeAccess}}
+      <button disabled  class="btn" >write permission</button>
+      {{else}}
+      <button onclick="sticky.reqWriteAccess('{{id}}', '{{name}}');"  class="btn">write permission</button>
+      {{/if}}
+      {{#if canShare}}
+      <button  onclick="sticky.openShareDoc('{{id}}', '{{name}}');;" class="btn">share permission</button>
+      {{/if}}
+    </div>
+      <button  onclick="sticky.deleteDoc('{{id}}', '{{name}}');"  class="close" >x</button>
+  </li>
+</script>
+
+
+<script id="et" type="text">
+  <div class="alert-error alert ">
+    <button  data-dismiss="alert" class="close">x</button>
+    {{#listalert errors}}{{/listalert}}
+  </div>
+</script>
+
+
+<script id="it" type="text">
+  <div class="  alert-info alert ">
+    <button  data-dismiss="alert" class="close">x</button>
+    {{#listalert infos}}{{/listalert}}
+  </div>
+</script>
+
+
+<script id="mfu" type="text">
+  <div  id="messages-modal" class="modal hide"  >
+    <div class="modal-header">
+      <button   data-dismiss="modal" type="button" class="close" >x</button>
+      <h3>my messages</h3>
+    </div>
+    <div class="modal-body">
+      <div class="message-box">
+	{{#displaymessages messages}}
+	{{#if isRequestAccess}} <!-- requestAccess-->
+	<div class="rac">
+          <b>{{fromUser}}</b> is requesting 
+	  {{#if readAccess}}Read{{/if}} 
+	  {{#if writeAccess}}, Write{{/if}}
+	  <b>acess permission</b> to user <strong>{{documentName}}</strong>
+	  <form onsubmit="return false;">
+	    <button onclick="user_messages.grantAccess('{{fromUser}}','{{documentId}}', '{{documentName}}', {{access}}); $(this).closest('li').remove();" class="btn btn-primary">grant permission</button>
+	    <button onclick="user_messages.declineAccess('{{fromUser}}', '{{documentId}}', {{access}}); $(this).closest('li').remove();" class="pull-right btn btn-danger">reject</button>
+	  </form>
+	</div>
+	{{/if}}      
+	{{#if isShareAccess}} <!-- shareAccess -->
+	<div class="s-a-b">
+	  <b>{{fromUser}}</b> wants to give you
+	  {{#if readAccess}}Read{{/if}}
+	  {{#if writeAccess}}, Write{{/if}}
+	  <b>Access</b> to <strong>{{documentName}}</strong>
+	  <form onsubmit="return false;">
+	    <button onclick="user_messages.acceptAccess('{{fromUser}}', '{{documentId}}', '{{documentName}}', {{access}}); $(this).closest('li').remove();" class="btn btn-primary">Accept</button>
+	    <button onclick="user_messages.declineAccess('{{fromUser}}', '{{documentId}}', {{access}});$(this).closest('li').remove();" class="btn btn-danger pull-right">Decline</button>
+	  </form>
+	</div>
+	{{/if}}
+	{{/displaymessages}}
+      </div>
+    </div>
+  </div>
+</script>
+
+
+<script id="share-document-modal" type="text">
+  <div  id="share-modal" class="modal hide">
+    <div class="modal-header">
+      <button type="button"  data-dismiss="modal" class="close">x</button>
+      <h3>Share {{docName}}</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-vertical" onsubmit="return false;">
+	<strong>Grant permission to user</strong>
+	<input type="text" name="userToShare" value="" autocomplete="off" placeholder="Enter Username" data-provide="typeahead" data-purpose="usernames" data-items="4"/>
+	<input type="hidden" name="docName" value="{{docName}}"/>
+	<input type="hidden" name="docId" value="{{docId}}"/>
+
+	<input type="hidden" name="read-access" value="false"/>
+	<input type="hidden" name="write-access" value="false"/>
+
+	<div class="btn-group">
+	  <button class="btn" onclick="var box=$(this).closest('form').find('[name=read-access]');box.val() == 'false' ? box.val('true') : box.val('false') ; $(this).toggleClass('btn-success');return false;">Read</button>
+	  <button class="btn" onclick="var box=$(this).closest('form').find('[name=write-access]');box.val() == 'false' ? box.val('true') : box.val('false') ; $(this).toggleClass('btn-success'); return false;">Write</button>
+	</div>
+	<strong>Access</strong>
+	to document <b>{{docName}}</b>
+	<button type="submit" onclick="sticky.shareDoc('{{docId}}', '{{docName}}', $(this).closest('form').find('[name=userToShare]').val(), $(this).closest('form').find('[name=read-access]').val() , $(this).closest('form').find('[name=write-access]').val());$('#share-modal').modal('hide');return false;" class="btn btn-primary pull-right">Share</button>
+      </form>
+    </div>
+  </div>
+ </script>
+
+<!-- modal box for requesting access to documents among users -->
+<script id="request-access-modal" type="text/x-handlebars-template">
+  <div class="modal hide" id="request-access">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">x</button>
+      <h3>Request Access to {{docName}}</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-vertical" onsubmit="return false;">
+	You are <strong>requesting</strong>
+	<input type="hidden" name="docName" value="{{docName}}"/>
+	<input type="hidden" name="docId" value="{{docId}}"/>
+
+	<input type="hidden" name="read-access"
+	       {{#if read}}
+	       value="true"
+	       {{else}}
+	       value="false"
+	       {{/if}}
+	/>
+	<input type="hidden" name="write-access" 
+	       {{#if write}}
+	       value="true"
+	       {{else}}
+	       value="false"
+	       {{/if}}	       
+	/>
+	<div class="btn-group">
+	  <button class="btn {{#if read}}btn-success{{/if}}" onclick="var box=$(this).closest('form').find('[name=read-access]');box.val() == 'false' ? box.val('true') : box.val('false') ; $(this).toggleClass('btn-success');return false;">Read</button>
+	  <button class="btn {{#if write}}btn-success{{/if}}" onclick="var box=$(this).closest('form').find('[name=write-access]');box.val() == 'false' ? box.val('true') : box.val('false') ; $(this).toggleClass('btn-success'); return false;">Write</button>
+	</div>
+	<strong>Access</strong>
+	to document <b>{{docName}}</b>
+	<button type="submit" onclick="sticky.requestDoc('{{docId}}', '{{docName}}', $(this).closest('form').find('[name=read-access]').val() , $(this).closest('form').find('[name=write-access]').val());$('#request-access').modal('hide');return false;" class="btn btn-primary pull-right">Send Request</button>
+      </form>
+    </div>
+  </div>
+</script>
